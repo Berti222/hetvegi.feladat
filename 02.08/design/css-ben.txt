@@ -1,0 +1,18 @@
+.navi a {
+    background-color:#2c2c2c;
+    margin: 30px;
+    padding: 20px;
+    text-decoration:none;
+    font-size:26pt;
+    border: 2px solid green;
+    color:green;
+    border-radius:10px;
+}
+.navi a:hover {
+    background-color:white;
+    color:red;
+    border: 2px solid red;
+}
+.navi a:first-child{
+    margin-left:0;
+}

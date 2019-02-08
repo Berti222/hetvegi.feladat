@@ -1,0 +1,45 @@
+[href="#konyvjelzo"]{
+    display:block;
+    text-decoration:none;
+    text-align:right;
+    color:yellow;
+    background-color:rgb(90, 90, 90);
+}
+[href="#konyvjelzo"]:hover{
+    color:rgb(255, 0, 0);
+    text-decoration:underline;
+    background-color:rgb(177, 177, 177);
+}
+
+h3{
+    text-align:center;
+    color:rgb(141, 3, 3);
+}
+h4 {
+    color:rgb(141, 3, 3);
+}
+#links a {
+    display: inline-block;
+    padding:5px;
+    border:1px solid green;
+    margin:5px 0 0 70px;
+    text-decoration:none;
+    color:rgb(21, 80, 21);
+    background-color:rgb(117, 156, 95);
+    font-size:18pt;
+    border-radius:5px;
+    width:200px;
+    max-width:200px;
+}
+#links a:hover{
+    color:red;
+    font-weight:bold;
+    box-shadow:2px 2px grey;
+    
+}
+#links a:active{
+    background-color: rgb(255, 255, 255);
+}
+#mekikep {
+    float:right;
+}

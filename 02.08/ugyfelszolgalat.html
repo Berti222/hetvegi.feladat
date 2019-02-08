@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ügyfélszolgálat</title>
+    <link rel="stylesheet" type="text/css" href="design/main.css"/>
+    <link rel="stylesheet" type="text/css" href="design/ugyfelszolgalat.css"/>
+</head>
+<body>
+    <header>
+        <nav>
+            <img src="img/emblema.png"/>
+            <h1>Ügyfélszolgálat</h1>
+            <ul>
+                <li><a href="ugyfelszolgalat.html">Ügyfélszolgálat</a></li>
+                <li><a href="Leiras.html">Tájékoztató</a></li>
+                <li><a href="Urlap.html">Kérdőív</a></li>
+            </ul>
+        </nav>
+    </header>
+
+<div class="hatter">
+    <h2>Ügyfélszolgálat</h2>
+    <hr/>
+    <div>Üdvözöljük ügyfélszolgálatunkon. Kérem írja meg problémáját!</div>
+    <div>Munkatársunk 1 órán belül válaszolni fog önnek e-mailben.</div>
+    <div>Ha sürgős kérdése van akkor kérem keressen minket telefonon. Tel.: +36 1 234 5678</div>
+    <br/>
+    <form method="get">
+        <label vor="u-name" class="nev_email">Név: </label><input id="u-name" type="text" name="name" placeholder="Mekk Elek" required="true"/>
+        <br/>
+        <label vor="u-email" class="nev_email">E-mail: </label><input id="u-email" type="email" name="email" placeholder="pl.:mekkelek@elek.com" required="true"/>
+        <br/>
+        <br/>
+        <label>Üzenet:</label>
+        <br/>
+        <textarea type="text" name="uzent" placeholder="Írja ide üzenetét:..." rows="12" cols="100"></textarea>
+        <br/>
+        <label class="elfogad"><input type="checkbox" name="elfogad" value="valaszido" checked /> Elfogadom hogy az ügyfélszolgálati válasz 1 órán túl is nyúlhat!</label>
+        <br/>
+        <button type="submit">
+            <a href="Urlap.html"></a>
+            Üzenet elüldése
+        </button>
+        <input type="reset" value="Mégsem">
+    </form>
+ </div>
+ <footer>
+        <nav>
+            <img src="img/footer.png"/>
+            <ul>
+                <li><a href="ugyfelszolgalat.html">Ügyfélszolgálat</a></li>
+                <li><a href="Leiras.html">Tájékoztató</a></li>
+                <li><a href="Urlap.html">Kérdőív</a></li>
+            </ul>
+        </nav>
+        <div>&copy; Minden jog fenttartva! IF-12</div>
+ </footer>
+</body>
+</html>
