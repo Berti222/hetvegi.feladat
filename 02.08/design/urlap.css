@@ -37,7 +37,7 @@ input[type=text], input[type=email],
     border:1px solid black;
     border-radius:5px;
     color:rgb(5, 70, 5);
-    background-color:rgb(243, 245, 142)
+    background-color:rgb(243, 245, 142);
 }
 input[type=text]:focus, input[type=email]:focus,
   input[type=date]:focus, #ap:focus {
@@ -53,7 +53,12 @@ textarea, select{
     margin:10px;
     border-radius:5px;
     color:rgb(5, 70, 5);
-    background-color:rgb(243, 245, 142)
+    background-color:rgb(243, 245, 142);
+    outline:0;
+}
+textarea:focus, select:focus, #koltFT:focus {
+    background-color:rgb(253, 255, 131);
+    box-shadow:0 0 10px;
 }
 div > label, legend{
     border:1px solid black;
