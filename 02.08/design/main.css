@@ -119,6 +119,7 @@ footer li{
     width:100px;
     max-width:100px;
     padding:5px;
+    text-align:left;
 }
 footer a{
     text-decoration:none;

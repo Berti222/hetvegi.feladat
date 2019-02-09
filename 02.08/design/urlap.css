@@ -85,3 +85,11 @@ fieldset > label {
     margin:0 500px;
     width:160px; 
 }
+#down:hover {
+    box-shadow:0 0 10px;
+}
+#koszonjukKitoltotte{
+    font-size:18pt;
+    font-weight:bold;
+    color:rgb(175, 42, 33);
+}
