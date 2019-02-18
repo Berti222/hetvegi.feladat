@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf8"/>
+<title>Pontok táblázatban</title>
+</head>
+<body>
+<h2>Webshp Imitálás<h2>
+    <h3>Termék feltöltése</h3>
+    <form>
+     <label>ID: <input id="termekId" type="text" neme="termekId" /></label> <br/>
+     <label>Termék neve: <input id="termekNev" type="text" neme="termekNev"/></label> <br/>
+     <label>Termék ára: <input id="termekAr" type="text" neme="termekAr"/></label> <br/>
+     <label>Termék képe: <input id="termekKep" type="text" neme="termekKep"/></label> <br/>
+     <input id="termekButton" type="button" name="termekButton" value="Termek Feltöltése!"/>
+    </form>
+    <h3>Termékek</h3>
+<table id="Termek" border="1">
+ <thead>
+  <tr>
+   <th>&nbsp;</th>
+   <th>ID:</th>
+   <th>Termék neve:</th>
+   <th>Termék ára:</th>
+   <th>Termék képe:</th>
+   
+  </tr>
+ </thead>
+ <tfoot></tfoot>
+ <tbody>
+ </tbody>
+</table>
+
+<h3>Termékek a Kosárban</h3>
+<table id="kosar">
+
+                <thead>
+                <tr>
+                 <th>&nbsp;</th>
+                 <th>ID:</th>
+                 <th>Termék neve:</th>
+                 <th>Termék ára:</th>
+                 <th>Termék képe:</th>
+                 
+                </tr>
+               </thead>
+               <tfoot></tfoot>
+               <tbody>
+               </tbody>
+              </table>
+
+
+</table>
+
+
+
+<script type="text/javascript">
+ 'use strict';
+ 
+ window.addEventListener('load', Window_Load_Handler, false);
+
+
+ 
+ function Termek (termekId, nev, ar, kep)
+ {
+     this.termekId = termekId,
+     this.nev = nev,
+     this.ar = ar,
+     this.kep = kep
+ } 
+ 
+ var pontok = [
+  //new Termek(new Button_Click_Handler()[0],new Button_Click_Handler()[0],new Button_Click_Handler()[0],new Button_Click_Handler()[0]),
+  new Termek(33,'süti',600,'https://www.telegraph.co.uk/content/dam/news/2018/07/11/TELEMMGLPICT000142803259_trans_NvBQzQNjv4BqpVlberWd9EgFPZtcLiMQfy2dmClwgbjjulYfPTELibA.jpeg?imwidth=450'),
+  
+  new Termek(7,'Torta',1500, 'kep'),
+ ];
+ 
+
+
+ function Window_Load_Handler()
+  {
+   console.log('Webshop futhat!');
+   
+   var nodeButton = document.querySelector('#termekButton');
+   nodeButton.addEventListener('click',Button_Click_Handler,false);
+   
+   var nodeTBody = document.querySelector('#Termek');
+   for(var i=0; i<pontok.length; i++)
+    {
+	 var nodeTR = document.createElement('TR');
+	 var nodeTD1 = document.createElement('TD');
+	 var nodeTD2 = document.createElement('TD');
+	 var nodeTD3 = document.createElement('TD');
+	 var nodeTD4 = document.createElement('TD');
+	 var nodeTD5 = document.createElement('TD');
+     var nodeTD5Kep = document.createElement('IMG');
+    var nodeTD6 = document.createElement('TD');
+    var nodeTd6Gomb = document.createElement('button');//.setAttribute('type','button').setAttribute('value','Törlés');
+    var nodeTD7 = document.createElement('TD');
+    var nodeTd7Gomb = document.createElement('button');
+		
+      var szama = i + 1;
+      console.log(szama);
+
+	nodeTD2.innerText = pontok [i].termekId;			
+	nodeTD3.innerText = pontok [i].nev;
+	nodeTD4.innerText = pontok [i].ar;
+    nodeTD5.innerText = pontok [i];
+    nodeTd6Gomb.innerText = 'Törlés';
+    nodeTd7Gomb.innerText = 'Kosárba';
+    nodeTd6Gomb.setAttribute('id','torles'+szama);
+    nodeTd6Gomb.setAttribute('szamom',szama);
+
+   // nodeTD5Kep.setAttribute('src',kep.value);
+
+	
+	nodeTR.appendChild(nodeTD1);
+	nodeTR.appendChild(nodeTD2);
+	nodeTR.appendChild(nodeTD3);
+	nodeTR.appendChild(nodeTD4);
+	nodeTR.appendChild(nodeTD5);
+    nodeTD5.appendChild(nodeTD5Kep);
+  nodeTR.appendChild(nodeTD6);
+    nodeTD6.appendChild(nodeTd6Gomb);
+nodeTR.appendChild(nodeTD7);
+    nodeTD7.appendChild(nodeTd7Gomb);
+
+	 
+	 nodeTBody.appendChild(nodeTR);
+	}
+  }
+  function Button_Click_Handler()
+  {
+   //alert('Megnyomták a gombot!!');
+
+   var node_form_id = document.querySelector('#termekId');
+   var node_form_nev = document.querySelector('#termekNev');
+   var node_form_ar = document.querySelector('#termekAr');
+   var node_form_kep = document.querySelector('#termekKep');
+
+   var termekekBox = [true,node_form_id.value, node_form_nev.value, node_form_ar.value, node_form_kep.value];
+
+   new Window_Load_Handler(node_form_id.value, node_form_nev.value, node_form_ar.value, node_form_kep.value);
+
+   return termekekBox;
+  };
+
+  
+
+  var ez = new Button_Click_Handler(); // miért nem menti nem lehet elmenteni a tömböt?
+
+  function forin()
+  {
+      for(var i = 0; i< ez.length; i++ ){
+        console.log(ez[i]);
+      }
+  }
+
+
+
+</script>
+<script type="text/javascript">
+
+</script>
+
+</body>
+</html>
