@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        img {
+            max-height: 300px;
+            max-width: 500px;
+        }
+        .pointer {cursor: pointer;}
+    </style>
+</head>
+
+<body>
+    <h2>Termék feltöltése</h2>
+
+    <form>
+        <label>ID: <input id="termekId" type="number" neme="termekId" /></label> <br />
+        <label>Termék neve: <input id="termekNev" type="text" neme="termekNev" /></label> <br />
+        <label>Termék ára: <input id="termekAr" type="number" neme="termekAr" /></label> <br />
+        <label>Termék képe: <input id="termekKep" type="url" neme="termekKep" /></label> <br />
+        <input id="termekButton" type="button" name="termekButton" value="Termek Feltöltése!" />
+    </form>
+    <h3>Termékek</h3>
+    <form>
+        <select id="filterSelect">
+            <option value="1">ID</option>
+            <option value="2">Név</option>
+            <option value="3">Ár (Olcsóbb mint)</option>
+            <option value="4">Ár (Drágább mint)</option>
+        </select>
+        <input type="text" id="searchInput"><input type="button" value="Szűrés" id="searcButton" />
+        <input type="button" value="Mégsem" id="MegsemSearcButton" />
+    </form>
+    <table id="Termek" border="1">
+        <thead>
+            <tr>
+
+                <th>ID: <span class="pointer" id="ID_up"> &#8679; </span> <span class="pointer" id="ID_down"> &#8681; </span></th>
+                <th>Termék neve: <span class="pointer" id="Nev_up"> &#8679; </span> <span class="pointer" id="Nev_down"> &#8681; </span></th>
+                <th>Termék ára: <span class="pointer" id="Ar_up"> &#8679; </span> <span class="pointer" id="Ar_down"> &#8681; </span></th>
+                <th>Termék képe:</th>
+
+            </tr>
+        </thead>
+        <tfoot></tfoot>
+        <tbody>
+        </tbody>
+    </table>
+
+    <h3>Termékek a Kosárban</h3>
+    <table id="kosar">
+
+        <thead>
+            <tr>
+                <th>ID:</th>
+                <th>Termék neve:</th>
+                <th>Termék ára:</th>
+                <th>Termék képe:</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <td colspan="4"></td>
+        </tfoot>
+        <tbody>
+        </tbody>
+    </table>
+
+
+    </table>
+    <script type="text/javascript">
+        'use strict';
+
+        window.addEventListener('load', Window_Load_Handler, false);
+
+        function Window_Load_Handler() {
+            console.log('Kezdődhet a dom fa felépítése');
+
+            //Termék feltöltés gomb a Táblázatba
+            var nodeClickTekmekFeltoltesButton = document.querySelector('#termekButton');
+            nodeClickTekmekFeltoltesButton.addEventListener('click', Button_Click_Handler);
+
+            var nodeTermekTablaTBody = document.querySelector('#Termek TBODY');
+            TablazatSorRajzolo(termekek, nodeTermekTablaTBody);
+
+            var nodeClickFilterButton = document.querySelector('#searcButton');
+            nodeClickFilterButton.addEventListener('click', Filter_Click_Handler, false);
+
+            var nodeClick_MegsemFilterButton = document.querySelector('#MegsemSearcButton');
+            nodeClick_MegsemFilterButton.addEventListener('click', MegsemFilter_Click_Handler, false);
+
+            // Srobarendezés ****************************************
+            var nodeID_Up_Button = document.querySelector('#ID_up');
+            nodeID_Up_Button.addEventListener('click', ID_Up_Button_Click, false);
+
+            var nodeID_Down_Button = document.querySelector('#ID_down');
+            nodeID_Down_Button.addEventListener('click', ID_Down_Button_Click, false);
+            
+            var nodeNev_Up_Button = document.querySelector('#Nev_up');
+            nodeNev_Up_Button.addEventListener('click', Nev_Up_Button_Click, false);
+
+            var nodeNev_Down_Button = document.querySelector('#Nev_down');
+            nodeNev_Down_Button.addEventListener('click', Nev_Down_Button_Click, false);
+            
+            var nodeAr_Up_Button = document.querySelector('#Ar_up');
+            nodeAr_Up_Button.addEventListener('click', Ar_Up_Button_Click, false);
+
+            var nodeAr_Down_Button = document.querySelector('#Ar_down');
+            nodeAr_Down_Button.addEventListener('click', Ar_Down_Button_Click, false);
+
+        }
+
+
+        // inputok lekérdezése
+        function Termek(TermekId, TermekNev, TermekAr, TermekKep) {
+            this.TermekId = TermekId,
+                this.TermekNev = TermekNev,
+                this.TermekAr = TermekAr,
+                this.TermekKep = TermekKep
+        }
+
+        var termekek = [new Termek(2, 'alma', 300, 'https://gyumolcsfacsemete.hu/shop_seopic/8891/057/400x400/057.jpg'),
+        new Termek(3, 'banán', 400, 'https://www.theorganicplace.com.au/wp-content/uploads/2015/01/Organic-Bananas.jpg'),
+        new Termek(4, 'szilva', 600, 'https://p1.akcdn.net/full/479973521.spajzold-be-alma-szilva-100-os-rostos-natur-gyumolcsle-5-l.jpg'),
+        new Termek(5, 'tégla ágy', 30000, 'https://24.p3k.hu/app/uploads/sites/11/2017/12/vxabhf7xolg_iv0t9j1okaxga8bsvqlwrygarrpxwyu-1-800x600.jpg'),
+        new Termek(6, 'Úthenger', 6999000, 'http://ocdn.eu/pulscms-transforms/1/8WaktkqTURBXy84Y2Q5YmUwNzRlYTM0MDE3NTM4YTMzOWIzMTk2MDNhYi5qcGVnkpUDAErNCErNBKmTBc0DFM0BvA')];
+        // gomb lenyomása
+        function Button_Click_Handler() {
+            var a = document.querySelector('#termekId');
+            var b = document.querySelector('#termekNev');
+            var c = document.querySelector('#termekAr');
+            var d = document.querySelector('#termekKep');
+
+            var e = parseInt(a.value);
+            var f = b.value;
+            var g = parseInt(c.value);
+            var h = d.value;
+            var objTermekek = new Termek(e, f, g, h);
+            //termekek = [];          // üres tömb legyen, különben többször rajzolja ki
+            termekek.push(objTermekek);
+
+            var nodeTermekTablaTBody = document.querySelector('#Termek TBODY');     // kirajzolofüggvény meghívása
+            new TablazatSorRajzolo(termekek, nodeTermekTablaTBody);
+
+            return objTermekek;
+        }
+
+
+        function PrintTermekTable(termekObjektum) {
+
+            var TermekTable;
+            TermekTable = document.createElement('TR');
+            var IDTD = document.createElement('TD');
+            var NevTD = document.createElement('TD');
+            var ArTD = document.createElement('TD');
+            var KepTD = document.createElement('TD');
+
+            var Koasaba = document.createElement('TD');
+            var Torles = document.createElement('TD');
+
+            var KepInTD = document.createElement('IMG');
+            var btnKoasaba = document.createElement('INPUT');
+            var btnTorles = document.createElement('INPUT');
+
+            IDTD.innerText = termekObjektum.TermekId;
+            NevTD.innerText = termekObjektum.TermekNev;
+            ArTD.innerText = termekObjektum.TermekAr + ' FT';
+
+
+            TermekTable.appendChild(IDTD);
+            TermekTable.appendChild(NevTD);
+            TermekTable.appendChild(ArTD);
+            TermekTable.appendChild(KepTD);
+
+            TermekTable.appendChild(Koasaba);
+            TermekTable.appendChild(Torles);
+
+            // Kép csatolása
+            KepTD.appendChild(KepInTD);
+            KepInTD.setAttribute('src', termekObjektum.TermekKep);
+
+            //Gombok értéka
+            //--kosárba
+            btnKoasaba.setAttribute('value', 'Kosárba');
+            btnKoasaba.setAttribute('type', 'button');
+            btnKoasaba.setAttribute('data-TermekID', termekObjektum.TermekId);
+            btnKoasaba.addEventListener('click', Kosarba_Click_Handler, false);
+
+            //--törlés
+            btnTorles.setAttribute('value', 'Törlés');
+            btnTorles.setAttribute('type', 'button');
+            btnTorles.setAttribute('data-TermekID', termekObjektum.TermekId);
+            btnTorles.addEventListener('click', Torles_Clisck_Handler, false);
+
+            //Gomb csatolása
+            Koasaba.appendChild(btnKoasaba);
+            Torles.appendChild(btnTorles);
+
+            return TermekTable;
+        }
+
+
+        //Termékekből táblázat sor  ******************************************************
+        function TablazatSorTermekekbol(termekObjektumTombje) {
+            var termekekTrows = [];
+            for (var i = 0; i < termekObjektumTombje.length; i++) {
+                termekekTrows.push(PrintTermekTable(termekObjektumTombje[i]));
+            }
+            return termekekTrows;
+        }
+
+        function TablazatSorRajzolo(termekObjektumTombje, TbodyAHtmlen) {
+            TbodyAHtmlen.innerText = '';        // ezzel törlöljük ki hogy ne rajzolja ujra, az egész-et mindig
+            var TrowsTomb = TablazatSorTermekekbol(termekObjektumTombje);
+            for (var i = 0; i < TrowsTomb.length; i++) {
+                TbodyAHtmlen.appendChild(TrowsTomb[i]);
+            }
+        }
+
+        //TÖRLÉS    **********************************************************************
+
+        function Tbody_TermekID_Megadasa(TBODY_ID) {
+            var nodeTermekTablaTBody = document.querySelector(TBODY_ID);
+        }
+        function Torles_Kosabol_Click_Handler() {
+            var btnSender = event.target;
+            var TermekID = parseInt(btnSender.getAttribute('data-TermekID'));
+
+            for (var i = 0; i < kosar.length; i++) {
+                //console.log(kosar[i]);
+                if (kosar[i].TermekId == TermekID) {
+                    kosar.splice(i, 1);
+                    break;
+                }
+            }
+            var nodeKosarTablaTBody = document.querySelector('#kosar TBODY');
+
+            KosarSorRajzolo(kosar, nodeKosarTablaTBody);
+            console.log(kosar);
+            new Kosar_TFoot_OsszAr();
+        }
+
+        function Torles_Clisck_Handler() {
+            var btnSender = event.target;
+            var buttonID = parseInt(btnSender.getAttribute('data-TermekID'));
+
+            for (var i = 0; i < termekek.length; i++) {
+                //console.log(termekek[i]);
+                if (termekek[i].TermekId == buttonID) {
+                    termekek.splice(i, 1);
+                    break;
+                }
+            }
+            var nodeTermekTablaTBody = document.querySelector('#Termek TBODY');
+
+            TablazatSorRajzolo(termekek, nodeTermekTablaTBody);
+            console.log(termekek);
+        }
+        // KOSÁR *********************************************************************
+        var kosar = [];
+
+        function Kosarba_Click_Handler() {
+            var TermekIDKosarba;
+            var termekKosarba;
+
+            var btnKosaba = event.target;
+            var TDKosaba = btnKosaba.parentNode;
+            var TRKosarba = TDKosaba.parentNode;
+            TermekIDKosarba = parseInt(TRKosarba.children[0].innerText);
+
+            termekKosarba = GetTermekByID(TermekIDKosarba);     // függvény meghivása
+            kosar.push(termekKosarba);
+
+            var nodeTermekekAKosarbaTbody = document.querySelector('#kosar TBODY');
+            KosarSorRajzolo(kosar, nodeTermekekAKosarbaTbody);
+            KosarArOsszegzo();
+
+            new Kosar_TFoot_OsszAr();
+
+            // return nem kell mert nem kell visszaadnia semmit mert elvégezte a dolgát
+        }
+
+        function GetTermekByID(ID) {
+            var termek;
+
+            for (var i = 0; i < termekek.length; i++) {
+                //console.log(termekek[i]);
+                if (termekek[i].TermekId == ID) {
+                    termek = termekek[i];
+                    break;
+                }
+            }
+            return termek;
+        }
+
+        function PrintKosarTable(termekObjektum) {
+
+            var TermekTable;
+            TermekTable = document.createElement('TR');
+            var IDTD = document.createElement('TD');
+            var NevTD = document.createElement('TD');
+            var ArTD = document.createElement('TD');
+            var KepTD = document.createElement('TD');
+
+            var Koasaba = document.createElement('TD');
+            var Torles = document.createElement('TD');
+
+            var KepInTD = document.createElement('IMG');
+            var btnKoasaba = document.createElement('INPUT');
+            var btnTorles = document.createElement('INPUT');
+
+            IDTD.innerText = termekObjektum.TermekId;
+            NevTD.innerText = termekObjektum.TermekNev;
+            ArTD.innerText = termekObjektum.TermekAr + ' FT';
+
+
+            TermekTable.appendChild(IDTD);
+            TermekTable.appendChild(NevTD);
+            TermekTable.appendChild(ArTD);
+            TermekTable.appendChild(KepTD);
+
+            TermekTable.appendChild(Koasaba);
+            TermekTable.appendChild(Torles);
+
+            // Kép csatolása
+            KepTD.appendChild(KepInTD);
+            KepInTD.setAttribute('src', termekObjektum.TermekKep);
+
+            //--törlés
+            btnTorles.setAttribute('value', 'Törlés');
+            btnTorles.setAttribute('type', 'button');
+            btnTorles.setAttribute('data-TermekID', termekObjektum.TermekId);
+            btnTorles.addEventListener('click', Torles_Kosabol_Click_Handler, false);
+
+            //Gomb csatolása
+            //Koasaba.appendChild(btnKoasaba);
+            Torles.appendChild(btnTorles);
+
+            return TermekTable;
+        }
+        function KosarSorRajzolo(termekObjektumTombje, TbodyAHtmlen) {
+            TbodyAHtmlen.innerText = '';        // ezzel törlöljük ki hogy ne rajzolja ujra, az egész-et mindig
+            var TrowsTomb = KosarSorTermekekbol(termekObjektumTombje);
+            for (var i = 0; i < TrowsTomb.length; i++) {
+                TbodyAHtmlen.appendChild(TrowsTomb[i]);
+            }
+        }
+        function KosarSorTermekekbol(termekObjektumTombje) {
+            var termekekTrows = [];
+            for (var i = 0; i < termekObjektumTombje.length; i++) {
+                termekekTrows.push(PrintKosarTable(termekObjektumTombje[i]));
+            }
+            return termekekTrows;
+        }
+
+        function KosarArOsszegzo()         // végiggondolni
+        {
+            var osszeg = 0;
+            for (var i = 0; i < kosar.length; i++) {
+                osszeg += parseInt(kosar[i].TermekAr);        // osszeghez minig hozzáadja // gomblenyomásnál lett meghívva
+            }
+            return osszeg;
+        }
+
+        // szűrés **************************************************************************************************
+        function TermekekNevSzures(filter) {
+            var found = [];
+
+            for (var i = 0; i < termekek.length; i++) {
+                if (termekek[i].TermekNev.toLowerCase().indexOf(filter) > -1) {
+                    found.push(termekek[i]);
+                }
+            }
+            return found;
+        }
+
+        function TermekekIdSzures(filter) {
+            var found = [];
+
+            for (var i = 0; i < termekek.length; i++) {
+                if (termekek[i].TermekId == parseInt(filter)) {
+                    found.push(termekek[i]);
+                }
+            }
+            return found;
+        }
+
+        function TermekekArSzures_Olcsobb(filter) {
+            var found = [];
+            for (var i = 0; i < termekek.length; i++) {
+                if (termekek[i].TermekAr <= parseInt(filter)) {
+                    found.push(termekek[i]);
+                }
+            }
+            return found;
+        }
+
+        function TermekekArSzures_Dragabb(filter) {
+            var found = [];
+            for (var i = 0; i < termekek.length; i++) {
+                if (termekek[i].TermekAr >= parseInt(filter)) {
+                    found.push(termekek[i]);
+                }
+            }
+            return found;
+        }
+
+
+        function SzuresSwitch(szam, filter) {
+            if (szam == 1) {
+                var a = TermekekIdSzures(filter);
+
+            } else if (szam == 2) {
+                var a = TermekekNevSzures(filter);
+
+            } else if (szam == 3) {
+                var a = TermekekArSzures_Olcsobb(filter);
+            }
+            else if (szam == 4) {
+                var a = TermekekArSzures_Dragabb(filter);
+            }
+            return a;
+        }
+
+
+
+
+        function Filter_Click_Handler() {
+
+            var filterSelect = document.querySelector('#filterSelect');
+            var kategoria = parseInt(filterSelect.value);
+
+            var filterText = document.querySelector('#searchInput');
+            var filterTextLowerCase = filterText.value.toLowerCase();
+
+            var filteredTermek = SzuresSwitch(kategoria, filterTextLowerCase);
+
+            console.log(filteredTermek);
+
+            var nodeTermekTablaTBody = document.querySelector('#Termek TBODY');
+            TablazatSorRajzolo(filteredTermek, nodeTermekTablaTBody);
+        }
+
+        function MegsemFilter_Click_Handler() {
+            var nodeTermekTablaTBody = document.querySelector('#Termek TBODY');
+            TablazatSorRajzolo(termekek, nodeTermekTablaTBody);
+        }
+
+        function Kosar_TFoot_OsszAr() {
+            var nodeKosarTablaTBody = document.querySelector('#kosar TFOOT TR TD');
+            nodeKosarTablaTBody.innerText = 'Öszesen fizetendő: ' + KosarArOsszegzo() + ' FT';
+        }
+
+
+        function SorbaRendezo() {
+            for (var i = 0; i < kosar.length - 1; i++) {
+                for (var j = i + 1; j < kosar.length; j++) {
+                    if (kosar[i].TermekID > kosar[j].TermekID) {
+                        var tomb = [kosar[i], kosar[j]];
+                        kosar[i] = tomb[1];
+                        kosar[j] = tomb[0];
+                    }
+                }
+            }
+        }
+        // sorbarendezés ********************************************************
+        // ID alapján -----------------------------------
+        function TermekId_Novekvo_SorbaRendezo() {
+            var TermekekTomb = termekek;
+
+            for (var i = 0; i < TermekekTomb.length - 1; i++) {
+                for (var j = i + 1; j < TermekekTomb.length; j++) {
+                    if (TermekekTomb[i].TermekId > TermekekTomb[j].TermekId) {
+                        var temp = [TermekekTomb[i], TermekekTomb[j]];
+                        TermekekTomb[i] = temp[1];
+                        TermekekTomb[j] = temp[0];
+                    }
+                }
+            }
+            return TermekekTomb;
+        }
+        function TermekId_Csokkeno_SorbaRendezo() {
+            var TermekekTomb = termekek;
+
+            for (var i = 0; i < TermekekTomb.length - 1; i++) {
+                for (var j = i + 1; j < TermekekTomb.length; j++) {
+                    if (TermekekTomb[i].TermekId < TermekekTomb[j].TermekId) {
+                        var temp = [TermekekTomb[i], TermekekTomb[j]];
+                        TermekekTomb[i] = temp[1];
+                        TermekekTomb[j] = temp[0];
+                    }
+                }
+            }
+            return TermekekTomb;
+        }
+        // Ar alapján -----------------------------------
+        function TermekAr_Novekvo_SorbaRendezo() {
+            var TermekekTomb = termekek;
+            for (var i = 0; i < TermekekTomb.length - 1; i++) {
+                for (var j = i + 1; j < TermekekTomb.length; j++) {
+                    if (TermekekTomb[i].TermekAr > TermekekTomb[j].TermekAr) {
+                        var temp = [TermekekTomb[i], TermekekTomb[j]];
+
+                        TermekekTomb[i] = temp[1];
+                        TermekekTomb[j] = temp[0];
+                    }
+                }
+            }
+
+            return TermekekTomb;
+        }
+        function TermekAr_Csokkeno_SorbaRendezo() {
+            var TermekekTomb = termekek;
+
+            for (var i = 0; i < TermekekTomb.length - 1; i++) {
+                for (var j = i + 1; j < TermekekTomb.length; j++) {
+                    if (TermekekTomb[i].TermekAr < TermekekTomb[j].TermekAr) {
+                        var temp = [TermekekTomb[i], TermekekTomb[j]];
+                        TermekekTomb[i] = temp[1];
+                        TermekekTomb[j] = temp[0];
+                    }
+                }
+            }
+            return TermekekTomb;
+        }
+
+        //Név alapján--------------------------------------------------------
+
+        function TermekNev_Novekvo_SorbaRendezo() {
+            var TermekekTomb = termekek;
+            for (var i = 0; i < TermekekTomb.length - 1; i++) {
+                for (var j = i + 1; j < TermekekTomb.length; j++) {
+                    if (TermekekTomb[i].TermekNev.localeCompare(TermekekTomb[j].TermekNev)>0) {
+                        var temp = [TermekekTomb[i], TermekekTomb[j]];
+
+                        TermekekTomb[i] = temp[1];
+                        TermekekTomb[j] = temp[0];
+                    }
+                }
+            }
+            return TermekekTomb;
+        }
+
+        function TermekNev_Csokkeno_SorbaRendezo() {
+            var TermekekTomb = termekek;
+            for (var i = 0; i < TermekekTomb.length - 1; i++) {
+                for (var j = i + 1; j < TermekekTomb.length; j++) {
+                    if (TermekekTomb[i].TermekNev.localeCompare(TermekekTomb[j].TermekNev)<0) {
+                        var temp = [TermekekTomb[i], TermekekTomb[j]];
+
+                        TermekekTomb[i] = temp[1];
+                        TermekekTomb[j] = temp[0];
+                    }
+                }
+            }
+            return TermekekTomb;
+        }
+
+        // sorabrendező meghívó *****************************************
+
+        function ID_Up_Button_Click() {
+            var arrTermekek = TermekId_Novekvo_SorbaRendezo();
+            var nodeTermekTablaTBody = document.querySelector('#Termek TBODY');
+            TablazatSorRajzolo(arrTermekek, nodeTermekTablaTBody);
+        }
+        function ID_Down_Button_Click() {
+            var arrTermekek = TermekId_Csokkeno_SorbaRendezo();
+            var nodeTermekTablaTBody = document.querySelector('#Termek TBODY');
+            TablazatSorRajzolo(arrTermekek, nodeTermekTablaTBody);
+        }
+        
+        function Nev_Up_Button_Click() {
+            var arrTermekek = TermekNev_Novekvo_SorbaRendezo();
+            var nodeTermekTablaTBody = document.querySelector('#Termek TBODY');
+            TablazatSorRajzolo(arrTermekek, nodeTermekTablaTBody);
+        }
+        function Nev_Down_Button_Click() {
+            var arrTermekek = TermekNev_Csokkeno_SorbaRendezo();
+            var nodeTermekTablaTBody = document.querySelector('#Termek TBODY');
+            TablazatSorRajzolo(arrTermekek, nodeTermekTablaTBody);
+            
+        }
+        
+        function Ar_Up_Button_Click() {
+            var arrTermekek = TermekAr_Novekvo_SorbaRendezo();
+            var nodeTermekTablaTBody = document.querySelector('#Termek TBODY');
+            TablazatSorRajzolo(arrTermekek, nodeTermekTablaTBody);
+        }
+        function Ar_Down_Button_Click() {
+            var arrTermekek = TermekAr_Csokkeno_SorbaRendezo();
+            var nodeTermekTablaTBody = document.querySelector('#Termek TBODY');
+            TablazatSorRajzolo(arrTermekek, nodeTermekTablaTBody);
+        }
+    </script>
+
+</body>
+
+</html>
